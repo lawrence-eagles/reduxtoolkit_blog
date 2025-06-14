@@ -3,7 +3,6 @@ import { selectPostSliceState } from './postSlice';
 
 const PostList = () => {
     const {posts, status, error} = useSelector(selectPostSliceState);
-
     
   return (
     <div>

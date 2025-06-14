@@ -3,10 +3,11 @@ import { createSlice, createAsyncThunk } from "@reduxjs/toolkit";
 const postUrl = "https://jsonplaceholder.typicode.com/posts";
 
 export const fetchPosts = createAsyncThunk('posts/fetchPosts', async () => {
-   const response = await fetch(postUrl);
-   const data = await response.json();
-   console.log("data", data);
-   return data;
+    const response = await fetch(postUrl);
+    if(!response.ok) throw Error("An error occoured! Unable to fetch posts.")
+    const data = await response.json();
+    console.log("data", data);
+    return data;
 })
 
 
@@ -29,6 +30,7 @@ export const postSlice = createSlice({
             state.posts = state.posts.concat(action.payload);
         }).addCase(fetchPosts.rejected, (state, action) => {
             state.status = "failed";
+            state.error = action.error?.message;
         })
     }
 })
