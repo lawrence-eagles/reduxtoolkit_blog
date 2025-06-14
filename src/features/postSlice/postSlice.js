@@ -1,6 +1,6 @@
 import { createSlice } from "@reduxjs/toolkit";
 
-const initalstate = {
+const initialState = {
     posts: [],
     status: "idle" // pending | success | error
 }
