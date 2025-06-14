@@ -1,14 +1,35 @@
-import { createSlice } from "@reduxjs/toolkit";
+import { createSlice, createAsyncThunk } from "@reduxjs/toolkit";
+
+const baseUrl = "https://jsonplaceholder.typicode.com/";
+
+export const fetchPosts = createAsyncThunk('posts/fetchPosts', async () => {
+   const response = await fetch(baseUrl);
+   const data = await response.json();
+   console.log("data", data);
+   return data;
+})
+
+
 
 const initialState = {
     posts: [],
-    status: "idle" // pending | success | error
+    status: "idle" // pending | success | failed
 }
 
 export const postSlice = createSlice({
     name: "posts",
     initialState,
-    reducers: {}
+    reducers: {},
+    extraReducers: (builder) => {
+        builder.addCase(fetchPosts.pending, (state, action) => {
+            state.status = "loading..."
+        }).addCase(fetchPosts.fulfilled, (state, action) => {
+            state.status = "success";
+            state.posts = state.posts.concat(action.payload);
+        }).addCase(fetchPosts.rejected, (state, action) => {
+            state.status = "failed";
+        })
+    }
 })
 
 
