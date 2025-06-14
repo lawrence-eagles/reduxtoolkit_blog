@@ -1,13 +1,15 @@
 import { useSelector } from 'react-redux'
-import { selectAllPosts } from './postSlice';
+import { selectPostSliceState } from './postSlice';
 
 const PostList = () => {
-    const {posts} = useSelector(selectAllPosts);
-    console.log("posts", posts)
+    const {posts, status, error} = useSelector(selectPostSliceState);
+
     
   return (
     <div>
-      {posts.map(post => (<h2 key={post.id}>{post.title}</h2>))}
+      {status === "loading" && (<h1>Loading...</h1>)}
+      {status === "failed" && <p>{error}</p>}
+      {status === "success" && posts.map(post => (<h2 key={post.id}>{post.title}</h2>))}
     </div>
   )
 }

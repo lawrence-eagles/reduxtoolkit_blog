@@ -13,7 +13,8 @@ export const fetchPosts = createAsyncThunk('posts/fetchPosts', async () => {
 
 const initialState = {
     posts: [],
-    status: "idle" // pending | success | failed
+    status: "idle", // pending | success | failed
+    error: null
 }
 
 export const postSlice = createSlice({
@@ -22,7 +23,7 @@ export const postSlice = createSlice({
     reducers: {},
     extraReducers: (builder) => {
         builder.addCase(fetchPosts.pending, (state, action) => {
-            state.status = "loading..."
+            state.status = "loading"
         }).addCase(fetchPosts.fulfilled, (state, action) => {
             state.status = "success";
             state.posts = state.posts.concat(action.payload);
@@ -33,7 +34,7 @@ export const postSlice = createSlice({
 })
 
 
-export const selectAllPosts = (state) => state.posts;
+export const selectPostSliceState = (state) => state.posts;
 
 export const {} = postSlice.actions;
 
