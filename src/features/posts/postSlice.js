@@ -33,7 +33,7 @@ export const postSlice = createSlice({
 })
 
 
-
+export const selectAllPosts = (state) => state.posts;
 
 export const {} = postSlice.actions;
 
