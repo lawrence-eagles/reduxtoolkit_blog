@@ -7,7 +7,8 @@ const SinglePost = () => {
   const { postid } = useParams();
   const dispatch = useDispatch();
 
-  const { post } = useSelector(selectPostSliceState);
+  const { post, singlePostStatus, singlePostError } =
+    useSelector(selectPostSliceState);
 
   const fetchPost = (id) => {
     try {
@@ -22,10 +23,16 @@ const SinglePost = () => {
   }, [postid]);
 
   return (
-    <article>
-      <h2>{post.title}</h2>
-      <p>{post.body}</p>
-    </article>
+    <div>
+      {singlePostStatus === "loading" && <h2>Loading...</h2>}
+      {singlePostStatus === "failed" && <p>{singlePostError}</p>}
+      {singlePostStatus === "success" && (
+        <article>
+          <h2>{post.title}</h2>
+          <p>{post.body}</p>
+        </article>
+      )}
+    </div>
   );
 };
 

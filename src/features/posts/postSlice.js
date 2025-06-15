@@ -38,6 +38,8 @@ const initialState = {
   posts: [],
   post: {},
   status: "idle", // pending | success | failed
+  singlePostStatus: "idle", // pending | success | failed
+  singlePostError: null,
   error: null,
 };
 
@@ -68,8 +70,16 @@ export const postSlice = createSlice({
         action.payload.date = new Date().toISOString();
         state.posts.push(action.payload);
       })
+      .addCase(fetchPostById.pending, (state, action) => {
+        state.singlePostStatus = "loading";
+      })
       .addCase(fetchPostById.fulfilled, (state, action) => {
+        state.singlePostStatus = "success";
         state.post = action.payload;
+      })
+      .addCase(fetchPostById.rejected, (state, action) => {
+        state.singlePostError = "failed";
+        state.singlePostError = action.error?.message;
       });
   },
 });
