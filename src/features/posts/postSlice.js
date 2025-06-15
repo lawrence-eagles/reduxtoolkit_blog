@@ -20,13 +20,23 @@ export const addPost = createAsyncThunk("post/addPost", async (postBody) => {
     // …
   });
   const data = await response.json();
-  console.log("response", data);
 
   return data;
 });
 
+export const fetchPostById = createAsyncThunk(
+  "post/fetchPostById",
+  async (postID) => {
+    const response = await fetch(`${postUrl}/${postID}`);
+    if (!response.ok) throw Error("An error occoured! Unable to fetch posts.");
+    const data = await response.json();
+    return data;
+  }
+);
+
 const initialState = {
   posts: [],
+  post: {},
   status: "idle", // pending | success | failed
   error: null,
 };
@@ -57,6 +67,9 @@ export const postSlice = createSlice({
         state.status = "success";
         action.payload.date = new Date().toISOString();
         state.posts.push(action.payload);
+      })
+      .addCase(fetchPostById.fulfilled, (state, action) => {
+        state.post = action.payload;
       });
   },
 });
