@@ -41,6 +41,20 @@ export const updatePost = createAsyncThunk(
   }
 );
 
+export const deletePost = createAsyncThunk("post/deletePost", async (id) => {
+  const response = await fetch(`${postUrl}/${id}`, {
+    method: "DELETE",
+    headers: {
+      "Content-Type": "application/json",
+    },
+    // body: JSON.stringify(postBody),
+    // …
+  });
+  const data = await response.json();
+  console.log("data", data);
+  return id;
+});
+
 // export const fetchPostById = createAsyncThunk(
 //   "post/fetchPostById",
 //   async (postID) => {
@@ -94,6 +108,11 @@ export const postSlice = createSlice({
         const posts = state.posts.filter((post) => post.id !== id);
         state.posts = [...posts, action.payload];
         state.editPostStatus = "success";
+      })
+      .addCase(deletePost.fulfilled, (state, action) => {
+        const id = action.payload;
+        const posts = state.posts.filter((post) => post.id !== id);
+        state.posts = posts;
       });
   },
 });

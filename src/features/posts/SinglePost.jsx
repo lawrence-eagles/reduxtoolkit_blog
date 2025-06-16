@@ -1,13 +1,24 @@
 import { useNavigate, useParams } from "react-router";
-import { useSelector } from "react-redux";
-import { selectPostById, selectPostSliceState } from "./postSlice";
+import { useDispatch, useSelector } from "react-redux";
+import { deletePost, selectPostById, selectPostSliceState } from "./postSlice";
 
 const SinglePost = () => {
   const { postid } = useParams();
+  const dispatch = useDispatch();
+
   const post = useSelector((state) => selectPostById(state, Number(postid)));
   const { editPostStatus } = useSelector(selectPostSliceState);
 
   const navigate = useNavigate();
+
+  const onDeletePostClick = () => {
+    try {
+      dispatch(deletePost(Number(postid))).unwrap();
+      navigate("/");
+    } catch (error) {
+      console.log(error.message);
+    }
+  };
 
   return (
     <>
@@ -25,7 +36,9 @@ const SinglePost = () => {
           >
             Edit Post
           </button>
-          <button type="button">Delete Post</button>
+          <button onClick={onDeletePostClick} type="button">
+            Delete Post
+          </button>
         </article>
       )}
     </>
