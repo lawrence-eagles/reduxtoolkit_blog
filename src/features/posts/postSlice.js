@@ -24,6 +24,23 @@ export const addPost = createAsyncThunk("post/addPost", async (postBody) => {
   return data;
 });
 
+export const updatePost = createAsyncThunk(
+  "post/updatePost",
+  async (postBody) => {
+    const response = await fetch(postUrl, {
+      method: "PUT",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify(postBody),
+      // …
+    });
+    const data = await response.json();
+    console.log("data", data);
+    return data;
+  }
+);
+
 export const fetchPostById = createAsyncThunk(
   "post/fetchPostById",
   async (postID) => {
@@ -80,6 +97,9 @@ export const postSlice = createSlice({
       .addCase(fetchPostById.rejected, (state, action) => {
         state.singlePostError = "failed";
         state.singlePostError = action.error?.message;
+      })
+      .addCase(updatePost.fulfilled, (state, action) => {
+        console.log("payload", action.payload);
       });
   },
 });
