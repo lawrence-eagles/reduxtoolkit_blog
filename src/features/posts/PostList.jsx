@@ -1,6 +1,6 @@
 import { useSelector } from "react-redux";
 import { selectPostSliceState } from "./postSlice";
-import { Link } from "react-router";
+import PostItem from "./PostItem";
 
 const PostList = () => {
   const { posts, status, error } = useSelector(selectPostSliceState);
@@ -14,11 +14,7 @@ const PostList = () => {
       {status === "loading" && <h1>Loading...</h1>}
       {status === "failed" && <p>{error}</p>}
       {status === "success" &&
-        sortedPosts.map((post) => (
-          <Link key={post.id} to={`post/${post.id}`}>
-            <h2>{post.title}</h2>
-          </Link>
-        ))}
+        sortedPosts.map((post) => <PostItem post={post} key={post.id} />)}
     </div>
   );
 };
