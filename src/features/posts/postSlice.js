@@ -17,7 +17,6 @@ export const addPost = createAsyncThunk("post/addPost", async (postBody) => {
       "Content-Type": "application/json",
     },
     body: JSON.stringify(postBody),
-    // …
   });
   const data = await response.json();
 
@@ -34,7 +33,6 @@ export const updatePost = createAsyncThunk(
         "Content-Type": "application/json",
       },
       body: JSON.stringify(postBody),
-      // …
     });
     const data = await response.json();
     return data;
@@ -47,12 +45,9 @@ export const deletePost = createAsyncThunk("post/deletePost", async (id) => {
     headers: {
       "Content-Type": "application/json",
     },
-    // body: JSON.stringify(postBody),
-    // …
   });
   const data = await response.json();
-  console.log("data", data);
-  return id;
+  return id; // for jsonplaceholder otherwise return data is correct for real API.
 });
 
 // export const fetchPostById = createAsyncThunk(
@@ -117,8 +112,12 @@ export const postSlice = createSlice({
   },
 });
 
+// get the initial state object in this slice
+// this function is passed to the useSelector hook to get data from the initial state in this slice in a component.
 export const selectPostSliceState = (state) => state.posts;
 
+// find a single post by Id from the posts array.
+// this function is passed to useSelector in the component
 export const selectPostById = (state, postid) =>
   state.posts?.posts.find((post) => post.id === postid);
 

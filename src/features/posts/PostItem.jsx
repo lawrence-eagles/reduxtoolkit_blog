@@ -2,8 +2,8 @@ import { Link, useNavigate } from "react-router";
 import TimeAgo from "./TimeAgo";
 
 const PostItem = ({ post }) => {
-  console.log("post", post);
   const navigate = useNavigate();
+
   return (
     <article>
       <div>
@@ -17,7 +17,7 @@ const PostItem = ({ post }) => {
         <button type="button" onClick={() => navigate(`/post/${post.id}`)}>
           View
         </button>
-        <button type="button" onClick={() => navigate(`/post/edit/${postid}`)}>
+        <button type="button" onClick={() => navigate(`/post/edit/${post.id}`)}>
           Edit
         </button>
       </div>
