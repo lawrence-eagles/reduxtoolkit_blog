@@ -1,43 +1,34 @@
-import React, { useEffect } from "react";
 import { useNavigate, useParams } from "react-router";
-import { fetchPostById, selectPostSliceState } from "./postSlice";
-import { useSelector, useDispatch } from "react-redux";
+import { useSelector } from "react-redux";
+import { selectPostById, selectPostSliceState } from "./postSlice";
 
 const SinglePost = () => {
   const { postid } = useParams();
-  const dispatch = useDispatch();
+  const post = useSelector((state) => selectPostById(state, Number(postid)));
+  const { editPostStatus } = useSelector(selectPostSliceState);
+
   const navigate = useNavigate();
 
-  const { post, singlePostStatus, singlePostError } =
-    useSelector(selectPostSliceState);
-
-  const fetchPost = (id) => {
-    try {
-      dispatch(fetchPostById(id)).unwrap();
-    } catch (error) {
-      console.log(error.message);
-    }
-  };
-
-  useEffect(() => {
-    fetchPost(postid);
-  }, [postid]);
-
   return (
-    <div>
-      {singlePostStatus === "loading" && <h2>Loading...</h2>}
-      {singlePostStatus === "failed" && <p>{singlePostError}</p>}
-      {singlePostStatus === "success" && (
+    <>
+      {!post && <h2>Post not found</h2>}
+
+      {editPostStatus === "loading" && <h2>Loading...</h2>}
+
+      {editPostStatus !== "loading" && (
         <article>
           <h2>{post.title}</h2>
           <p>{post.body}</p>
-          <button type="button" onClick={navigate(`edit/${postid}`)}>
+          <button
+            type="button"
+            onClick={() => navigate(`/post/edit/${postid}`)}
+          >
             Edit Post
           </button>
           <button type="button">Delete Post</button>
         </article>
       )}
-    </div>
+    </>
   );
 };
 

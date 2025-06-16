@@ -27,7 +27,8 @@ export const addPost = createAsyncThunk("post/addPost", async (postBody) => {
 export const updatePost = createAsyncThunk(
   "post/updatePost",
   async (postBody) => {
-    const response = await fetch(postUrl, {
+    const { id } = postBody;
+    const response = await fetch(`${postUrl}/${id}`, {
       method: "PUT",
       headers: {
         "Content-Type": "application/json",
@@ -36,27 +37,24 @@ export const updatePost = createAsyncThunk(
       // …
     });
     const data = await response.json();
-    console.log("data", data);
     return data;
   }
 );
 
-export const fetchPostById = createAsyncThunk(
-  "post/fetchPostById",
-  async (postID) => {
-    const response = await fetch(`${postUrl}/${postID}`);
-    if (!response.ok) throw Error("An error occoured! Unable to fetch posts.");
-    const data = await response.json();
-    return data;
-  }
-);
+// export const fetchPostById = createAsyncThunk(
+//   "post/fetchPostById",
+//   async (postID) => {
+//     const response = await fetch(`${postUrl}/${postID}`);
+//     if (!response.ok) throw Error("An error occoured! Unable to fetch posts.");
+//     const data = await response.json();
+//     return data;
+//   }
+// );
 
 const initialState = {
   posts: [],
-  post: {},
   status: "idle", // pending | success | failed
-  singlePostStatus: "idle", // pending | success | failed
-  singlePostError: null,
+  editPostStatus: "idle", // pending | success | failed
   error: null,
 };
 
@@ -87,24 +85,23 @@ export const postSlice = createSlice({
         action.payload.date = new Date().toISOString();
         state.posts.push(action.payload);
       })
-      .addCase(fetchPostById.pending, (state, action) => {
-        state.singlePostStatus = "loading";
-      })
-      .addCase(fetchPostById.fulfilled, (state, action) => {
-        state.singlePostStatus = "success";
-        state.post = action.payload;
-      })
-      .addCase(fetchPostById.rejected, (state, action) => {
-        state.singlePostError = "failed";
-        state.singlePostError = action.error?.message;
+      .addCase(updatePost.pending, (state, action) => {
+        state.editPostStatus = "loading";
       })
       .addCase(updatePost.fulfilled, (state, action) => {
-        console.log("payload", action.payload);
+        const { id } = action.payload;
+        action.payload.date = new Date().toISOString();
+        const posts = state.posts.filter((post) => post.id !== id);
+        state.posts = [...posts, action.payload];
+        state.editPostStatus = "success";
       });
   },
 });
 
 export const selectPostSliceState = (state) => state.posts;
+
+export const selectPostById = (state, postid) =>
+  state.posts?.posts.find((post) => post.id === postid);
 
 export const {} = postSlice.actions;
 
